@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+textblob
+python-dotenv
+apscheduler
+spacy
+firebase-admin
+sqlalchemy
+databases
+asyncpg  # For PostgreSQL
