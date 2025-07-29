@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from models.mood import MoodEntry
-from models.exercise import BrainExerciseSubmission
+from models.brain_gym import BrainExerciseSubmission
 from utils.llm import call_local_llm  # assumes you have this helper already
 
 def get_recent_mood_and_exercises(user_id: str, db: Session):

@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 venv/
 .idea/
+backend/model_llm/*.gguf

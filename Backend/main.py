@@ -4,17 +4,7 @@ from fastapi import FastAPI,Request
 from routers import mood, thought, anchor, brain
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from routers import reminder,brain_gym,resurface,ai_coach
-
-app = FastAPI()
-
-
-@app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=500,
-        content={"message": "Internal server error", "detail": str(exc)},
-    )
+from routers import reminder,brain_gym,resurface,ai_coach,notify
 
 
 app = FastAPI(
@@ -22,6 +12,13 @@ app = FastAPI(
     description="Mental fitness, journaling, and brain gym backend",
     version="1.0.0"
 )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"message": "Internal server error", "detail": str(exc)},
+    )
 
 # CORS setup to allow frontend requests
 app.add_middleware(
@@ -40,6 +37,7 @@ app.include_router(brain.router)
 app.include_router(reminder.router)
 app.include_router(resurface.router)
 app.include_router(ai_coach.router)
+app.include_router(notify.router)
 
 
 @app.get("/")
