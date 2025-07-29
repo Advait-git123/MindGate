@@ -1,15 +1,12 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from datetime import datetime
-from ..database import Base
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.sql import func
+from utils.database import Base
 
-class ThoughtEntry(Base):
-    __tablename__ = "thought_entries"
-
+class Thought(Base):
+    __tablename__ = "thoughts"
+    
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, ForeignKey("users.uid"))
-    thought = Column(String)
-    sentiment = Column(String)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-
-    user = relationship("User", back_populates="thoughts")
+    user_id = Column(String, nullable=False)
+    text = Column(String, nullable=False)
+    sentiment = Column(String, default="neutral")
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())

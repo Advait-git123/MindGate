@@ -1,18 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from .. import schemas, models
-from ..database import get_db
+from models.mood import Mood
+from utils.database import get_db
 
-router = APIRouter(prefix="/mood", tags=["Mood Journal"])
+router = APIRouter()
 
-@router.post("/")
-def log_mood(entry: schemas.MoodEntryCreate, db: Session = Depends(get_db)):
-    mood = models.MoodEntry(**entry.dict())
-    db.add(mood)
+@router.post("/mood")
+def log_mood(user_id: str, mood: str, db: Session = Depends(get_db)):
+    entry = Mood(user_id=user_id, mood=mood)
+    db.add(entry)
     db.commit()
-    db.refresh(mood)
-    return mood
+    db.refresh(entry)
+    return {"message": "Mood logged", "mood": entry.mood, "timestamp": entry.timestamp}
 
-@router.get("/{user_id}")
-def get_mood_entries(user_id: str, db: Session = Depends(get_db)):
-    return db.query(models.MoodEntry).filter(models.MoodEntry.user_id == user_id).all()
+@router.get("/mood/{user_id}")
+def get_mood_history(user_id: str, db: Session = Depends(get_db)):
+    return db.query(Mood).filter(Mood.user_id == user_id).order_by(Mood.timestamp.desc()).all()

@@ -1,15 +1,12 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
-from ..database import Base
+from utils.database import Base
 
 class MoodEntry(Base):
     __tablename__ = "mood_entries"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, ForeignKey("users.uid"))
-    mood = Column(String, index=True)
-    note = Column(String, nullable=True)
+    user_id = Column(String, index=True)
+    mood = Column(String)
+    note = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
-
-    user = relationship("User", back_populates="moods")

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
+from Backend.utils.database import SessionLocal
 from models.anchor import Anchor
 from schemas import AnchorIn, AnchorOut
 

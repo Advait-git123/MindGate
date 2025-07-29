@@ -16,3 +16,12 @@ class MoodIn(BaseModel):
 class ThoughtIn(BaseModel):
     uid: str
     content: str
+
+class MoodEntryCreate(BaseModel):
+    user_id: str
+    mood: str
+    note: str = None
+
+class ThoughtEntryCreate(BaseModel):
+    user_id: str
+    thought: str
