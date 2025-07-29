@@ -4,7 +4,7 @@ from fastapi import FastAPI,Request
 from routers import mood, thought, anchor, brain
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from routers import reminder,brain_gym,resurface,ai_coach,notify
+from routers import reminder,brain_gym,resurface,ai_coach,notify,user_device,tokens
 
 
 app = FastAPI(
@@ -38,6 +38,8 @@ app.include_router(reminder.router)
 app.include_router(resurface.router)
 app.include_router(ai_coach.router)
 app.include_router(notify.router)
+app.include_router(user_device.router)
+app.include_router(tokens.router) 
 
 
 @app.get("/")

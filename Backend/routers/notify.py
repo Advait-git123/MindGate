@@ -1,26 +1,24 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from utils.database import get_db
-from models.anchor import Anchor
-from utils.scheduler import is_due
-from pydantic import BaseModel
-from datetime import datetime
+from utils.notify import get_due_thoughts
+from utils.firebase_messaging import send_fcm
+from models.user import User
 
 router = APIRouter()
 
-class NotifyRequest(BaseModel):
-    user_id: str
-    method: str = "mock"  # options: "mock", "email", "push"
+@router.get("/notify")
+def notify_all(db: Session = Depends(get_db)):
+    due_by_user = get_due_thoughts(db)
+    sent = []
 
-@router.post("/notify")
-def mock_notify(req: NotifyRequest, db: Session = Depends(get_db)):
-    anchors = db.query(Anchor).filter(Anchor.user_id == req.user_id).all()
-    due = [a for a in anchors if is_due(a.timestamp)]
-    count = len(due)
-    # In real use: integrate Firebase or email logic here
-    return {
-        "user": req.user_id,
-        "method": req.method,
-        "reminder_count": count,
-        "timestamp": datetime.utcnow().isoformat()
-    }
+    for uid, thoughts in due_by_user.items():
+        user = db.query(User).filter(User.id == uid).first()
+        if not user or not user.fcm_token:
+            continue
+
+        body = f"You have {len(thoughts)} anchors to reflect on today"
+        result = send_fcm(user.fcm_token, "MindMate Reminder", body)
+        sent.append({"user": uid, "result": result})
+
+    return {"sent_notifications": sent}
