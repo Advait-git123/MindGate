@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 class AnchorIn(BaseModel):
-    uid: str
+    user_id: str
     text: str
 
 class AnchorOut(AnchorIn):
@@ -10,11 +10,11 @@ class AnchorOut(AnchorIn):
     created_at: datetime
 
 class MoodIn(BaseModel):
-    uid: str
+    user_id: str
     entry: str
 
 class ThoughtIn(BaseModel):
-    uid: str
+    user_id: str
     content: str
 
 class MoodEntryCreate(BaseModel):
